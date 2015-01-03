@@ -1,0 +1,5 @@
+c:\users\pc\documents\visual studio 2012\Projects\Ambiente\Ambiente\bin\Ambiente.dll
+c:\users\pc\documents\visual studio 2012\Projects\Ambiente\Ambiente\bin\Ambiente.pdb
+c:\users\pc\documents\visual studio 2012\Projects\Ambiente\Ambiente\obj\Debug\Ambiente.dll
+c:\users\pc\documents\visual studio 2012\Projects\Ambiente\Ambiente\obj\Debug\Ambiente.pdb
+c:\users\pc\documents\visual studio 2012\Projects\Ambiente\Ambiente\obj\Debug\Ambiente.csprojResolveAssemblyReference.cache

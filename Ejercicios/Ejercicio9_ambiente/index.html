@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Generar ambiente</title>
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap.dark.min.css" rel="stylesheet" />
+     <link href="css/style.css" rel="stylesheet" />
+    <script src="js/babylon.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+   
+</head>
+<body>
+    <div style="position:absolute; margin:4px;">
+        <a class="thumbnail"><img id="configurar" class="img-thumbnail" width="42" src="controles/config.png" /></a>
+        <br />
+        <a class="thumbnail"><img id="camaraControl" class="img-thumbnail on" width="42" src="controles/control.png" /></a>
+
+    </div>
+  
+    <div id="ModalConfiguraciones" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Configuración</h4>
+            </div>
+            <div class="modal-body">
+                 <h4 class="modal-title">Escenario</h4>
+                <div class="row">
+                    <div class="col-xs-6 col-md-4">
+                        <img class="img-thumbnail texturas" id="t1" src="ImgExcenario/1_thumbnail.jpg" />
+                    </div>
+                    <div class="col-xs-6 col-md-4">
+                        <img class="img-thumbnail texturas" id="t2" src="ImgExcenario/2_thumbnail.jpg" />
+                    </div>
+                    <div class="col-xs-6 col-md-4">
+                        <img class="img-thumbnail texturas"  id="t3" src="ImgExcenario/3_thumbnail.jpg" />
+                    </div>
+                </div>
+
+    <br /><br />
+                <h4 class="modal-title">Sonido</h4> 
+                <div class="row">
+                <div class="col-xs-6 col-md-4">
+                 <img class="img-thumbnail cambioSonido" id="s1" width="42" src="controles/sonido.png" />
+                 Sonido 1
+                </div>
+                <div class="col-xs-6 col-md-4">
+                 <img class="img-thumbnail cambioSonido"   id="s2" width="42" src="controles/sonido.png" />
+                 Sonido 2
+                </div>
+                    <div class="col-xs-6 col-md-4">
+                 <img class="img-thumbnail cambioSonido"  id="s3" width="42" src="controles/sonido.png" />
+                 Sonido 3
+                </div>    
+
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-primary" data-dismiss="modal" >Aceptar</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <canvas id="renderCanvas"></canvas>
+ </body>
+    <script>
+
+        // Canvas/Escenario/ Etc.
+        var canvas = document.getElementById("renderCanvas");
+        var engine = new BABYLON.Engine(canvas, true);
+        var Escenario = new BABYLON.Scene(engine);
+
+        var Camara = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, new BABYLON.Vector3(0, 0, 0), Escenario);
+        Camara.beta = 1.79;
+        Camara.alpha = 8.4;
+        Camara.radius = 20;
+        Camara.target = new BABYLON.Vector3(-5, -4, 0);
+        Camara.attachControl(canvas);
+        
+        CamaraFP = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 10, -10), Escenario);
+        CamaraFP.attachControl(canvas);
+        
+        // Plano
+        var Piso = BABYLON.Mesh.CreatePlane("piso", 100, Escenario);
+        Piso.specularColor = new BABYLON.Color3(0, 0, 0);
+        Piso.position = new BABYLON.Vector3(0, -5, 0);
+        Piso.rotation = new BABYLON.Vector3(Math.PI / 2, 0, 0);
+
+
+
+        // Cubo y Cielo
+        var CuboCielo = BABYLON.Mesh.CreateBox("cielo", 10000, Escenario);
+
+        //Cubo con textura
+        var Cubo = new BABYLON.Mesh.CreateBox("crate", 10, Escenario);
+        Cubo.material = new BABYLON.StandardMaterial("Mat", Escenario);
+        Cubo.material.diffuseTexture = new BABYLON.Texture("ImgExcenario/t1_abajo.jpg", Escenario);
+        Cubo.material.diffuseTexture.hasAlpha = true;
+        Cubo.position = new BABYLON.Vector3(0, 10, -10);
+        var MaterialCuboCielo = new BABYLON.StandardMaterial("Cielo", Escenario);
+        MaterialCuboCielo.backFaceCulling = false;
+
+        MaterialCuboCielo.reflectionTexture = new BABYLON.CubeTexture("ImgExcenario/t3", Escenario, ["_derecha.jpg", "_arriba.jpg", "_atraz.jpg", "_izquierda.jpg", "_abajo.jpg", "_frente.jpg"]);
+        MaterialCuboCielo.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        MaterialCuboCielo.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        MaterialCuboCielo.specularColor = new BABYLON.Color3(0, 0, 0);
+        
+        CuboCielo.material = MaterialCuboCielo;
+
+        // REFLEJO 
+
+        var MaterialReflejante = new BABYLON.StandardMaterial("texture4", Escenario);
+        MaterialReflejante.reflectionTexture = new BABYLON.MirrorTexture("mirror", 512, Escenario, true); //Create a mirror texture
+        MaterialReflejante.reflectionTexture.mirrorPlane = new BABYLON.Plane(0, -1.0, 0, -10.0);
+        MaterialReflejante.reflectionTexture.renderList = [Cubo, CuboCielo];
+        MaterialReflejante.reflectionTexture.level = 1;
+
+        // Luz
+        var LuzPoint = new BABYLON.PointLight("Omnidir", new BABYLON.Vector3(0, -50, 0), Escenario);
+        var LuzDirecional = new BABYLON.DirectionalLight("Omni", new BABYLON.Vector3(-2, -50, 50), Escenario);
+
+        // Sombras
+        var shadowGenerator = new BABYLON.ShadowGenerator(1024, LuzDirecional);
+        shadowGenerator.getShadowMap().renderList.push(Cubo);
+        shadowGenerator.useVarianceShadowMap = true;
+
+        LuzDirecional.setDirectionToTarget = Cubo;
+        Piso.receiveShadows = true;
+        CuboCielo.receiveShadows = true;
+
+        
+        MaterialReflejante.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        MaterialReflejante.specularColor = new BABYLON.Color3(0, 0, 0);
+
+        Piso.material = MaterialReflejante;
+        Piso.material.backFaceCulling = false;
+
+        window.addEventListener("resize", function () { engine.resize(); });
+        engine.runRenderLoop(function () { Escenario.render(); });
+        
+        // Funcionalidad para el sonido
+        function CargarSonidoFondo(numSonido, modo) {
+            if (modo == "inicial") {
+                SonidoFondo = new Audio("sonidos/level1.mp3");
+                SonidoFondo.addEventListener('ended', function () {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
+                SonidoFondo.play();
+            }
+            if (modo == "cambio") {
+
+                switch (numSonido) {
+                    case "s1": urlSonido = "sonidos/level1.mp3";
+                        break;
+                    case "s2": urlSonido = "sonidos/level2.mp3";
+                        break;
+                    case "s3": urlSonido = "sonidos/level3_1.mp3";
+                        break;
+                }
+                SonidoFondo.src = urlSonido;
+                SonidoFondo.load();
+                SonidoFondo.play();
+            }
+        }
+
+        function ReproducirSonido() {
+            SonidoNormal = new Audio("sonidos/clic.mp3");
+            SonidoNormal.play();
+        }
+        function CargarMundo(NumTextura) {
+            MaterialCuboCielo.reflectionTexture = new BABYLON.CubeTexture("ImgExcenario/" + NumTextura, Escenario, ["_derecha.jpg", "_arriba.jpg", "_atraz.jpg", "_izquierda.jpg", "_abajo.jpg", "_frente.jpg"]);
+            MaterialCuboCielo.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            MaterialCuboCielo.diffuseColor = new BABYLON.Color3(0, 0, 0);
+            MaterialCuboCielo.specularColor = new BABYLON.Color3(0, 0, 0);
+            CuboCielo.material = MaterialCuboCielo;
+        }
+
+        // Monitor de eventos 
+        $(document).ready(function () {
+
+            CargarSonidoFondo("s1", "inicial");
+            // Configuración 
+            $("#configurar").click(function () {
+                ReproducirSonido();
+                $("#ModalConfiguraciones").modal('show');
+
+            });
+            // Cambio de escenario
+            $(".texturas").click(function () {
+                ReproducirSonido();
+                CargarMundo(this.id);
+            });
+            // Cambio de sonido 
+            // cambio de sonido ambiental
+            $(".cambioSonido").click(function () {
+                CargarSonidoFondo(this.id, "cambio");
+            });
+
+            //cambioa de cámara
+            $("#camaraControl").click(function () {
+                if (this.className == "on") {
+                    this.className = "off";
+                    Escenario.activeCamera = Camara;
+                } else {
+                    this.className = "on";
+
+                    Escenario.activeCamera = CamaraFP;
+                }
+
+            });
+
+
+
+        });
+
+</script>
+</html>
