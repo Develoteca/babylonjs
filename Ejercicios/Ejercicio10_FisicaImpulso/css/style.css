@@ -1,0 +1,53 @@
+﻿  html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+        }
+.cambioSonido {
+    cursor:pointer;
+     background-color: #F4F0F0;
+}
+.texturas {
+    cursor:pointer;
+     background-color: #F4F0F0;
+}
+#configurar {
+    background-color: #F4F0F0;
+    cursor:pointer;
+}
+#camaraControl {
+    background-color: #F4F0F0;
+    cursor:pointer;
+}
+h4.play{
+color:#fff;
+font-size:70px;
+/*Use shadows to slowly build up the glow. The first shadow should be the colour of the text. Subsequent shadows are the colour you want the glow to be, all with no x or y offset and with increasing amounts of blur (the number of shadows you use depends on how big you want the glow to be).*/
+text-shadow:0 0 10px #fff, 0 0 20px #00d2ff, 0 0 30px #00d2ff, 0 0 40px #00d2ff, 0 0 50px #00d2ff, 0 0 60px #00d2ff, 0 0 70px #00d2ff;
+cursor:pointer;
+}
+h4.tiempo{
+color:#fff;
+font-size:70px;
+/*Use shadows to slowly build up the glow. The first shadow should be the colour of the text. Subsequent shadows are the colour you want the glow to be, all with no x or y offset and with increasing amounts of blur (the number of shadows you use depends on how big you want the glow to be).*/
+text-shadow:0 0 10px #fff, 0 0 20px #ffd800, 0 0 30px #ffd800, 0 0 40px #ffd800, 0 0 50px #ffd800, 0 0 60px #ffd800, 0 0 70px #ffd800;
+}
+h5.Puntajes{
+color:#fff;
+font-size:60px;
+/*Use shadows to slowly build up the glow. The first shadow should be the colour of the text. Subsequent shadows are the colour you want the glow to be, all with no x or y offset and with increasing amounts of blur (the number of shadows you use depends on how big you want the glow to be).*/
+text-shadow:0 0 10px #f00, 0 0 20px #f00, 0 0 30px #f00, 0 0 40px #f00, 0 0 50px #f00, 0 0 60px #f00, 0 0 70px #f00;
+}
+h5.Individual{
+color:#fff;
+font-size:150px;
+/*Use shadows to slowly build up the glow. The first shadow should be the colour of the text. Subsequent shadows are the colour you want the glow to be, all with no x or y offset and with increasing amounts of blur (the number of shadows you use depends on how big you want the glow to be).*/
+text-shadow:0 0 10px #f00, 0 0 20px #f00, 0 0 30px #f00, 0 0 40px #f00, 0 0 50px #f00, 0 0 60px #f00, 0 0 70px #f00;
+}
