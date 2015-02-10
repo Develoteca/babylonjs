@@ -1,0 +1,144 @@
+<html>
+<head><title>Modelos y texturas</title></head>
+<body>
+
+<script src="three.min.js"></script>
+<script src="TrackballControls.js"></script>
+<script src="THREEx.KeyboardState.js"></script>
+<script type="text/javascript" src="ColladaLoader.js"></script>
+<script>
+var teclado = new THREEx.KeyboardState();
+// iniciando renderizado
+iniciar();
+// animando la renderización
+animar();
+// tiempo para el movimiento (se agarra del sistema)
+// función de inicio		
+function iniciar(){
+	// escenario
+	escenario = new THREE.Scene();
+	control=0;
+	// configuración de la camara
+	//tamaño
+	var SCREEN_WIDTH = window.innerWidth; 
+	var SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 45;
+	var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
+	var NEAR = 0.1;
+	var FAR = 10000;
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	escenario.add(camera);
+	camera.position.set(0,100,200);
+	// Renderer
+	renderer = new THREE.WebGLRenderer( {antialias:true} );
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	document.body.appendChild( renderer.domElement );
+	// controles del ratón que se agregan a la camara
+	controles = new THREE.TrackballControls( camera );
+	// textura territorio(ó plano)
+	crear_territorio();
+	
+	//cargar el modelo blender json
+	JsonModeloBlender = new THREE.JSONLoader();
+	JsonModeloBlender.load( "avi.js", AgregarModeloBlender );	
+	animar();
+	/*cargar modelo dae de google sketchup
+	var JsonModeloDDAE = new THREE.ColladaLoader();
+	JsonModeloDDAE.load( "avion.dae", AgregarModeloDAE );	
+	*/
+	
+	
+	//agregar un poco de luz
+	Luz();
+	var teclado=new THREEx.KeyboardState();
+	
+}
+function Luz(){
+	var luz = new THREE.PointLight(0xffffff);
+	luz.position.set(-100,200,100);
+	escenario.add(luz);
+	//luz de ambiente
+	var Luzambiente = new THREE.AmbientLight(0x000000);
+	escenario.add(Luzambiente);
+	// más luz
+	var sunlight = new THREE.DirectionalLight();
+    sunlight.position.set(500, 500, -500);
+    sunlight.intensity = 1.3;
+    sunlight.castShadow = true;
+    sunlight.shadowCameraVisible = true;
+    sunlight.shadowCameraNear = 250;
+    sunlight.shadowCameraFar = 20000;
+    sunlight.shadowCameraLeft = -200;
+    sunlight.shadowCameraRight = 200;
+    sunlight.shadowCameraTop = 200;
+    sunlight.shadowCameraBottom = -200;
+	escenario.add(sunlight);
+
+}
+function AgregarModeloBlender( geometry, materials ) {
+
+	imagen=new THREE.ImageUtils.loadTexture('mario2.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );
+	modelo3d_ = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({ specular: '#a9fcff',color: '#00abb1',emissive: '#006063',shininess: 100}));	
+	escenario.add(modelo3d_);
+	//modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+	control=1;
+}
+function AgregarModeloDAE(infodae) {
+	modelodae=infodae.scene;
+	
+	escenario.add(modelodae);
+	
+}
+function crear_territorio(){
+var TexturaTerritorio = new THREE.ImageUtils.loadTexture( 'cesped.jpg' );
+	TexturaTerritorio.wrapS = TexturaTerritorio.wrapT = THREE.RepeatWrapping; 
+	TexturaTerritorio.repeat.set( 10, 10 );
+	var MaterialTextura = new THREE.MeshBasicMaterial( { map: TexturaTerritorio, side: THREE.DoubleSide } );
+	var GeometriaTerritorio = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+	var territorio = new THREE.Mesh(GeometriaTerritorio, MaterialTextura);
+	territorio.position.y = -0.5;
+	territorio.rotation.x = Math.PI / 2;
+	escenario.add(territorio);
+}
+function animar() {
+	controles.update();
+	requestAnimationFrame( animar );
+	renderer.render(escenario,camera);	
+	tiempo=0.01;
+	distancia=100;
+	recorrido=distancia*tiempo;
+	
+	if(teclado.pressed("a")){modelo3d_.translateX(recorrido);		}
+	if(teclado.pressed("s")){modelo3d_.translateX(-recorrido);		}
+	
+	if(teclado.pressed("d")){modelo3d_.translateY(recorrido);		}
+	if(teclado.pressed("f")){modelo3d_.translateY(-recorrido);		}
+
+	if(teclado.pressed("g")){modelo3d_.translateZ(recorrido);		}
+	if(teclado.pressed("h")){modelo3d_.translateZ(-recorrido);		}
+	
+	if(teclado.pressed("z")){modelo3d_.rotation.z =	modelo3d_.rotation.z+0.1;}
+	if(teclado.pressed("x")){modelo3d_.rotation.x =	modelo3d_.rotation.x+0.1;}
+	if(teclado.pressed("c")){modelo3d_.rotation.y =	modelo3d_.rotation.y+0.1;}
+	
+	
+	
+	if(control==1){
+	console.log(modelo3d_.position.x);
+	if(modelo3d_.position.x==274){
+	modelo3d_.rotation.z =-Math.PI/4;
+	}
+	modelo3d_.translateX(-recorrido);
+	
+	}
+	
+			
+}
+</script>
+
+</body>
+</html>
