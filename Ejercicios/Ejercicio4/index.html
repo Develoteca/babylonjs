@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bootstrap 3, from LayoutIt!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+	<!--link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" /-->
+	<!--link rel="stylesheet/less" href="less/responsive.less" type="text/css" /-->
+	<!--script src="js/less-1.3.3.min.js"></script-->
+	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  <!-- Fav and touch icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="img/favicon.png">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
+    <script src="js/babylon.js"></script>
+    <script src="js/hand.js"></script>
+    <link href="css/style.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-3 column">
+			<div class="list-group">
+				 <a href="#" class="list-group-item active">Configuración</a>
+				<div class="list-group-item">
+			Valor x: <input id="test" type="range" min="-5" max="10" value="0"  onchange="cambiarPosX(this.value)"/><br />
+            <br />Valor y: <input id="Range1" type="range" min="-5" max="10" value="0" onchange="cambiarPosY(this.value)"/><br />
+            <br />Valor z: <input id="Range2" type="range" min="-5" value="-5" max="10"  onchange="cambiarPosZ(this.value)"/><br />
+            <br />Escalar X: <input id="Range3" type="range" min="-5" value="0" max="10"  onchange="cambiarTamanioX(this.value)"/><br />
+            <br />Escalar Y: <input id="Range4" type="range" min="-5" value="0" max="10"  onchange="cambiarTamanioY(this.value)"/><br />
+            <br />Escalar Z: <input id="Range5" type="range" min="-5" value="0" max="10"  onchange="cambiarTamanioZ(this.value)"/><br />
+            <br />Rotar x: <input id="Range6" type="range" min="-5" value="0" max="90"  onchange="RotarX(this.value)"/><br />
+            <br />Rotar y: <input id="Range7" type="range" min="-5" value="0" max="90"  onchange="RotarY(this.value)"/><br />
+            <br />Rotar z: <input id="Range8" type="range" min="-5" value="0" max="90"  onchange="RotarZ(this.value)"/><br />
+            <br /><input type="file" id="filePicker"/><br />
+            <br /><label for="background-color">Color: </label>
+<input id="background-color" type="color" value="#ff0000" onchange="cambiarColor(document.getElementById('background-color').value);">
+                    <br />
+</div>
+<div>
+</div>
+				
+			</div>
+		</div>
+        <div class="col-md-9 column">
+            <div id="divconCatacteristicas">
+        <canvas id="Modelo3D"></canvas>
+    </div>
+              <script>
+
+                  //elementos canvas 
+                  var ElementoCanvas = document.getElementById("Modelo3D");
+                  // Cargar BABYLON 3D En las canvas
+                  var MotorBabylon = new BABYLON.Engine(ElementoCanvas, true);
+                  // Escenario 
+                  var Escenario = new BABYLON.Scene(MotorBabylon);
+                  Escenario.ambientColor = new BABYLON.Color3(25, 25, 25);
+                  // Cargar Cámara
+                  var Camara = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 30, new BABYLON.Vector3(0, 0, 0), Escenario);
+                  // La luz 
+                  var Luz = new BABYLON.PointLight("Omni", new BABYLON.Vector3(10, 10, -30), Escenario);
+                  // Elemento 3D Box 
+                  var box = BABYLON.Mesh.CreateBox("NombreBox", 6.0, Escenario);
+                  box.position = new BABYLON.Vector3(-10, 0, 0);
+                  box.material = new BABYLON.StandardMaterial("MaterialEjemploBox", Escenario);
+                  box.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+                  box.material.bumpTexture = new BABYLON.Texture("texturareal.png", Escenario);
+                  // Elemento 3D Cylinder 
+                  var Cylinder = BABYLON.Mesh.CreateCylinder("Cylinder1", 5, 5, 5, 10, 10, Escenario);
+                  Cylinder.position = new BABYLON.Vector3(0, 0, -5);
+                  Cylinder.material = new BABYLON.StandardMaterial("MaterialEjemploCylinder", Escenario);
+                  Cylinder.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+                  Cylinder.material.emissiveTexture = new BABYLON.Texture("ftb.jpg", Escenario);
+                  // Elemento 3D Sphere
+                  var Sphere = BABYLON.Mesh.CreateSphere("Sphere", 10, 10, Escenario);
+                  Sphere.position = new BABYLON.Vector3(0, 15, 0);
+                  Sphere.material = new BABYLON.StandardMaterial("Material", Escenario);
+                  Sphere.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+                  Sphere.material.diffuseTexture = new BABYLON.Texture("ftb.jpg", Escenario);
+                  // Elemento 3D Plane
+                  var Plane = BABYLON.Mesh.CreatePlane("Plano", 10, Escenario);
+                  Plane.material = new BABYLON.StandardMaterial("Material", Escenario);
+                  Plane.material.backFaceCulling = false;
+                  Plane.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+                  Plane.material.alpha = 0.5;
+                  Sphere.position = new BABYLON.Vector3(0, 0, 10);
+                  // Elementos 3D Torus
+                  var Torus = BABYLON.Mesh.CreateTorus("Torus", 3, 1, 10, Escenario, false);
+                  Torus.position = new BABYLON.Vector3(10, 0, 0);
+                  Torus.material = new BABYLON.StandardMaterial("Material", Escenario);
+                  Torus.material.wireframe = true;
+                  // Elemento 3D Mesh
+                  var triangulo = new BABYLON.Mesh("Triangulo", Escenario);
+                  var posiciones = [
+                      0, 1, 0,
+                     -1, -1, 0,
+                      1, -1, 0
+                  ];
+                  var normalizar = [
+                      1, 1, 1,
+                      1, 1, 1,
+                      1, 1, 1
+                  ];
+                  var indices = [];
+                  indices.push(0);
+                  indices.push(1);
+                  indices.push(2);
+                  // Los datos
+                  triangulo.setVerticesData(posiciones, BABYLON.VertexBuffer.PositionKind);
+                  // La normalización
+                  triangulo.setVerticesData(normalizar, BABYLON.VertexBuffer.NormalKind);
+                  // los índices
+                  triangulo.setIndices(indices);
+                  triangulo.material = new BABYLON.StandardMaterial("Material1", Escenario);
+                  triangulo.material.backFaceCulling = false;
+                  triangulo.material.wireframe = true;
+                  triangulo.position = new BABYLON.Vector3(10, 10, 0);
+                  // Agregar de la cámara al escenario
+                  Escenario.activeCamera.attachControl(ElementoCanvas);
+                  // Agregamos un render del escenario
+                  MotorBabylon.runRenderLoop(function () {
+                      Escenario.render();
+                  });
+     </script>
+             <script>
+
+                 var handleFileSelect = function (evt) {
+                     var Archivo = evt.target.files;
+                     var ArchivoUnico = Archivo[0];
+                     if (Archivo && ArchivoUnico) {
+                         var reader = new FileReader();
+                         reader.onload = function (readerEvt) {
+                             var InfoBinaria = readerEvt.target.result;
+                             Cylinder.material.diffuseTexture = new BABYLON.Texture("data:image/jpg;base64," + btoa(InfoBinaria), Escenario);
+                         };
+                         reader.readAsBinaryString(ArchivoUnico);
+                     }
+                 };
+                 if (window.File && window.FileReader && window.FileList && window.Blob) {
+                     document.getElementById('filePicker').addEventListener('change', handleFileSelect, false);
+                 }
+                 function cambiarTamanioX(valor) {
+                     Cylinder.scaling.x = valor;
+                 }
+                 function cambiarTamanioY(valor) {
+                     Cylinder.scaling.y = valor;
+                 }
+                 function cambiarTamanioZ(valor) {
+                     Cylinder.scaling.z = valor;
+                 }
+                 function cambiarPosX(valor) {
+                     Cylinder.position.x = valor;
+                 }
+                 function cambiarPosZ(valor) {
+                     Cylinder.position.y = valor;
+                 }
+                 function cambiarPosZ(valor) {
+                     Cylinder.position.z = valor;
+                 }
+                 function RotarX(valor) {
+                     Cylinder.rotation.x = (Math.PI * valor) / 180;
+                 }
+                 function RotarY(valor) {
+                     Cylinder.rotation.y = (Math.PI * valor) / 180;
+                 }
+                 function RotarZ(valor) {
+                     Cylinder.rotation.z = (Math.PI * valor) / 180;
+                 }
+                 function cambiarColor(valor) {
+                     R=(parseInt((cutHex(valor)).substring(0, 2), 16));
+                     G=(parseInt((cutHex(valor)).substring(2, 4), 16));
+                     B = (parseInt((cutHex(valor)).substring(4, 6), 16));
+                     Plane.material.diffuseColor = new BABYLON.Color3(R,G,B);
+                 }
+                 function cutHex(h) { return (h.charAt(0) == "#") ? h.substring(1, 7) : h }
+    </script>
+		</div>
+	</div>
+</div>
+</body>
+</html>
