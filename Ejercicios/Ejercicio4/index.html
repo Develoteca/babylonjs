@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -31,7 +31,10 @@
 <body>
 <div class="container">
 	<div class="row clearfix">
-		<div class="col-md-3 column">
+		
+        <div class="col-md-12 column">
+		
+		<div class="column" style="position: absolute;   width: 229px;">
 			<div class="list-group">
 				 <a href="#" class="list-group-item active">Configuración</a>
 				<div class="list-group-item">
@@ -54,7 +57,7 @@
 				
 			</div>
 		</div>
-        <div class="col-md-9 column">
+		
             <div id="divconCatacteristicas">
         <canvas id="Modelo3D"></canvas>
     </div>
@@ -187,6 +190,7 @@
                  function cutHex(h) { return (h.charAt(0) == "#") ? h.substring(1, 7) : h }
     </script>
 		</div>
+		
 	</div>
 </div>
 </body>
