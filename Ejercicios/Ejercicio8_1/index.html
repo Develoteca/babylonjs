@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+
+    <script src="js/babylon.js"></script>
+    <script src="js/jquery.min.js"></script>
+      <style>html, body {overflow: hidden;width: 100%;height: 100%;margin: 0;padding: 0;}
+            
+           canvas {width: 100%;height:600px;touch-action: none;}
+        </style>
+</head>
+<body>
+
+    <form id="form1" runat="server">
+    <div>
+        <div>Elementos:<span id="num"></span></div>
+    <canvas id="renderCanvas"></canvas>
+    </div>
+    </form>
+    <script>
+
+        var canvas = document.getElementById("renderCanvas");
+        var engine = new BABYLON.Engine(canvas, true);
+        var Escenario = new BABYLON.Scene(engine);
+
+        var Luz = new BABYLON.PointLight("Luz", new BABYLON.Vector3(2, -5, -2), Escenario);
+        var LuzOmni = new BABYLON.DirectionalLight("Omni", new BABYLON.Vector3(-2, -5, 2), Escenario);
+
+        var Camara = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, -8, -20), Escenario);
+        Camara.attachControl(canvas, false);
+
+        // objetos
+        var Piso = BABYLON.Mesh.CreatePlane("piso", 40, Escenario);
+        Piso.material = new BABYLON.StandardMaterial("groundMat", Escenario);
+        Piso.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+        Piso.material.backFaceCulling = false;
+        Piso.position = new BABYLON.Vector3(5, -10, -15);
+        Piso.rotation = new BABYLON.Vector3(Math.PI / 2, 0, 0);
+
+        // Pared
+        var Pared = BABYLON.Mesh.CreateBox("Pared", 2, Escenario);
+        Pared.material = new BABYLON.StandardMaterial("Mat", Escenario);
+        Pared.material.diffuseTexture = new BABYLON.Texture("pared.jpg", Escenario);
+        Pared.material.diffuseTexture.hasAlpha = true;
+        Pared.position = new BABYLON.Vector3(5, 0, 6);
+        Pared.scaling = new BABYLON.Vector3(20, 10, 1);
+
+        // Pared2
+        var Pared2 = Pared.clone("Pared2");
+        Pared2.rotation.y = Math.PI / 2;
+        Pared2.position = new BABYLON.Vector3(25, 0,-16);
+
+        // Esfera
+        var Esfera = BABYLON.Mesh.CreateSphere("Enemigo", 10, 3, Escenario);
+        Esfera.position = new BABYLON.Vector3(0, 15, 0);
+        Esfera.material = new BABYLON.StandardMaterial("MaterialSphere1", Escenario);
+        Esfera.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+        Esfera.position = new BABYLON.Vector3(0, -9, -5);
+
+        // Elemento 3D Box 
+        var box = BABYLON.Mesh.CreateBox("NombreBox",1, Escenario);
+        box.position = new BABYLON.Vector3(-10, 0, 0);
+        box.material = new BABYLON.StandardMaterial("MaterialBox1", Escenario);
+        box.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+        box.material.bumpTexture = new BABYLON.Texture("texturareal.png", Escenario);
+        box.position = new BABYLON.Vector3(10, -9, 0);
+        box.scaling = new BABYLON.Vector3(0.5, 0.5, 4);
+
+        Escenario.gravity = new BABYLON.Vector3(0,-0.9, 0);
+        Escenario.collisionsEnabled = true;
+
+        Camara.checkCollisions = true;
+        Camara.applyGravity = true;
+        Camara.ellipsoid = new BABYLON.Vector3(1, 1, 1);
+
+        Piso.checkCollisions = true;
+        Pared.checkCollisions = true;
+        Pared2.checkCollisions = true;
+        Esfera.checkCollisions = true;
+        
+        engine.runRenderLoop(function () {
+            Escenario.render();
+        });
+
+        Escenario.registerBeforeRender(function () {
+
+            box.position.x = Camara.position.x;
+            box.position.z = Camara.position.z + 1;
+            box.rotation = Camara.rotation;
+
+            if (box.intersectsMesh(Esfera, true)&&Escenario.isReady()) {
+
+                if(Esfera!=undefined){
+                Esfera.position.x=Esfera.position.x+10;
+                }
+            }
+            
+        });
+
+        
+       
+       </script>
+</body>
+</html>
