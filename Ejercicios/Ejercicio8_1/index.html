@@ -16,7 +16,7 @@
 
     <form id="form1" runat="server">
     <div>
-       
+    <h3>Usar Teclas: A,W,S,D</h3>
     <canvas id="renderCanvas"></canvas>
     </div>
     </form>
@@ -31,6 +31,10 @@
 
         var Camara = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, -8, -20), Escenario);
         Camara.attachControl(canvas, false);
+        Camara.keysLeft = [65, 37];
+        Camara.keysRight = [68, 39];
+        Camara.keysUp = [87, 38];
+        Camara.keysDown = [83, 40];
 
         // objetos
         var Piso = BABYLON.Mesh.CreatePlane("piso", 40, Escenario);
