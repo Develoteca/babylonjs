@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+
+          <script src="http://www.babylonjs.com/babylon.js"></script>
+      <style>html, body {overflow: hidden;width: 100%;height: 100%;margin: 0;padding: 0;}
+            #renderCanvas {width: 100%;height: 100%;touch-action: none;}
+        </style>
+</head>
+<body>
+
+    <form id="form1" runat="server">
+    <div>
+        <div>Elementos:<span id="num"></span></div>
+    <canvas id="renderCanvas"></canvas>
+    </div>
+    </form>
+    <script>
+
+        var canvas = document.getElementById("renderCanvas");
+        var engine = new BABYLON.Engine(canvas, true);
+        var Escenario = new BABYLON.Scene(engine);
+
+        var Luz = new BABYLON.PointLight("Luz", new BABYLON.Vector3(2, -5, -2), Escenario);
+        var LuzOmni = new BABYLON.DirectionalLight("Omni", new BABYLON.Vector3(-2, -5, 2), Escenario);
+
+        var Camara = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, -8, -20), Escenario);
+        Camara.attachControl(canvas, false);
+
+        // objetos
+        var Piso = BABYLON.Mesh.CreatePlane("piso", 40, Escenario);
+        Piso.material = new BABYLON.StandardMaterial("groundMat", Escenario);
+        Piso.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+        Piso.material.backFaceCulling = false;
+        Piso.position = new BABYLON.Vector3(5, -10, -15);
+        Piso.rotation = new BABYLON.Vector3(Math.PI / 2, 0, 0);
+
+        // Pared
+        var Pared = BABYLON.Mesh.CreateBox("Pared", 2, Escenario);
+        Pared.material = new BABYLON.StandardMaterial("Mat", Escenario);
+        Pared.material.diffuseTexture = new BABYLON.Texture("pared.jpg", Escenario);
+        Pared.material.diffuseTexture.hasAlpha = true;
+        Pared.position = new BABYLON.Vector3(5, 0, 6);
+        Pared.scaling = new BABYLON.Vector3(20, 10, 1);
+
+        // Pared2
+        var Pared2 = Pared.clone("Pared2");
+        Pared2.rotation.y = Math.PI / 2;
+        Pared2.position = new BABYLON.Vector3(25, 0, -16);
+
+
+        // Esfera
+        var Esfera = BABYLON.Mesh.CreateSphere("Enemigo", 10, 3, Escenario);
+        Esfera.position = new BABYLON.Vector3(0, 15, 0);
+        Esfera.material = new BABYLON.StandardMaterial("MaterialSphere1", Escenario);
+        Esfera.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+        Esfera.position = new BABYLON.Vector3(0, -9, -5);
+
+        // Elemento 3D Box 
+        var box = BABYLON.Mesh.CreateBox("NombreBox",1, Escenario);
+        box.position = new BABYLON.Vector3(-10, 0, 0);
+        box.material = new BABYLON.StandardMaterial("MaterialBox1", Escenario);
+        box.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+        box.material.bumpTexture = new BABYLON.Texture("texturareal.png", Escenario);
+        box.position = new BABYLON.Vector3(10, -9, 0);
+        box.scaling = new BABYLON.Vector3(0.5, 0.5, 4);
+
+        
+        
+        Escenario.gravity = new BABYLON.Vector3(0,-0.9, 0);
+        Escenario.collisionsEnabled = true;
+
+        Camara.checkCollisions = true;
+        Camara.applyGravity = true;
+
+        Camara.ellipsoid = new BABYLON.Vector3(1, 1, 1);
+
+        Piso.checkCollisions = true;
+        Pared.checkCollisions = true;
+        Pared2.checkCollisions = true;
+        Esfera.checkCollisions = true;
+        box.visibility = false;
+
+        engine.runRenderLoop(function () {
+            Escenario.render();
+        });
+
+       Escenario.registerBeforeRender(function () {
+           
+           CrearParticula(0, Esfera);
+
+            var pointToIntersect = new BABYLON.Vector3(Camara.position.x + 1.5, Camara.position.y + 1.5, Camara.position.z + 1.5);
+
+            if (Pared2.intersectsPoint(pointToIntersect)) {
+                CrearParticula(3, Camara);
+                CrearParticula(1, Camara);
+            }
+            if (Pared.intersectsPoint(pointToIntersect)) {
+                CrearParticula(2, Camara);
+            }
+            box.position.x = Camara.position.x;
+            box.position.z = Camara.position.z + 1;
+            box.rotation = Camara.rotation;
+            if (box.intersectsMesh(Esfera, true) && Escenario.isReady()) {
+                Esfera.dispose();
+                CrearParticula(0,Esfera);
+            }
+            
+            
+        });
+
+       function CrearParticula(Num, Elemento) {
+
+           var Particulas = ["img/flare.png", "img/SmokeParticle.png", "img/Star02.png", "img/fire.png"];
+
+           // Creando partículas 
+           var Particula = new BABYLON.ParticleSystem("particles", 2000, Escenario);
+
+           //Textura de partículas
+           Particula.particleTexture = new BABYLON.Texture(Particulas[Num], Escenario);
+
+           // origen de las particulas inicio y final
+           Particula.emitter = Elemento.position; // obj
+           Particula.minEmitBox = new BABYLON.Vector3(1, 0, 0); //inicio
+           Particula.maxEmitBox = new BABYLON.Vector3(1, 0, 0); // final
+
+
+           // Tamaños de partículas 
+           Particula.minSize = 0.1;
+           Particula.maxSize = 5;
+
+           // Timepo de vida
+           Particula.minLifeTime = 0.01;
+           Particula.maxLifeTime = 0.1;
+
+           // Cantidad de partículas
+           Particula.emitRate = 500;
+
+           // BLENDMODE_ONEONE (No Transparente), BLENDMODE_STANDARD (Transparente)
+           if (Num == 1) {
+               Particula.blendMode = BABYLON.ParticleSystem.BLENDMODE_STANDARD;
+           } else {
+               Particula.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+           }
+           // Gravedad
+           Particula.gravity = new BABYLON.Vector3(0, 9, 0);
+
+           // Vectores de dirección
+           Particula.direction1 = new BABYLON.Vector3(-7, 8, 3);
+           Particula.direction2 = new BABYLON.Vector3(7, 8, -3);
+
+           // Angulos
+           Particula.minAngularSpeed = 0;
+           Particula.maxAngularSpeed = Math.PI;
+
+           // Velocidad de visibilidad
+           Particula.minEmitPower = 1;
+           Particula.maxEmitPower = 10;
+           Particula.updateSpeed = 0.0005;
+
+           Particula.start();
+
+
+           setTimeout(function () { Particula.stop(); }, 300);
+
+       }
+      
+       </script>
+</body>
+</html>
