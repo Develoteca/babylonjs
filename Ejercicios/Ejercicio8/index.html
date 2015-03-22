@@ -40,7 +40,9 @@
         var Luz = new BABYLON.PointLight("Luz", new BABYLON.Vector3(10, 10, 5), Escenario);
 
         var Camara = new BABYLON.ArcRotateCamera("Camara", 0, 0, 10, new BABYLON.Vector3(0, 0, 0), Escenario);
-        Camara.attachControl(canvas, false);
+        Camara.attachControl(canvas, true);
+        Camara.lowerRadiusLimit = Camara.radius;
+Camara.upperRadiusLimit = Camara.radius;
 
 
         var Plane = BABYLON.Mesh.CreatePlane("Plano", 10, Escenario);
