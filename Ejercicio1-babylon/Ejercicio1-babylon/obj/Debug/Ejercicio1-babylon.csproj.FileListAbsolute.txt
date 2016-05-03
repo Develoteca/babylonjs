@@ -1,0 +1,5 @@
+c:\users\pc\documents\visual studio 2012\Projects\Ejercicio1-babylon\Ejercicio1-babylon\bin\Ejercicio1-babylon.dll
+c:\users\pc\documents\visual studio 2012\Projects\Ejercicio1-babylon\Ejercicio1-babylon\bin\Ejercicio1-babylon.pdb
+c:\users\pc\documents\visual studio 2012\Projects\Ejercicio1-babylon\Ejercicio1-babylon\obj\Debug\Ejercicio1-babylon.csprojResolveAssemblyReference.cache
+c:\users\pc\documents\visual studio 2012\Projects\Ejercicio1-babylon\Ejercicio1-babylon\obj\Debug\Ejercicio1-babylon.dll
+c:\users\pc\documents\visual studio 2012\Projects\Ejercicio1-babylon\Ejercicio1-babylon\obj\Debug\Ejercicio1-babylon.pdb
